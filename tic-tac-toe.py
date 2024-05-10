@@ -3,6 +3,7 @@ import os
 from pygame import mixer
 from time import sleep
 import sys
+from colorama import Style, Fore
 
 class EndGame(Exception):
     pass
@@ -45,6 +46,14 @@ def clear_screen():
     else:
         _ = os.system('clear')
 
+def color(cell):
+    if cell == COMPUTER_SYMBOL:
+        return Fore.RED + str(cell) + Style.RESET_ALL
+    elif cell == USER_SYMBOL:
+        return Fore.GREEN + str(cell) + Style.RESET_ALL
+    else:
+        return str(cell) + Style.RESET_ALL
+
 def display_board(board):
     # The function accepts one parameter containing the board's current status
     # and prints it out to the console.
@@ -52,17 +61,19 @@ def display_board(board):
                                 board[1][0], board[1][1], board[1][2],\
                                 board[2][0], board[2][1], board[2][2]
     board_display = f"""
+    computer's score = {computer_score}
+    your score = {user_score}
     +-------+-------+-------+
     |       |       |       |
-    |   {p}   |   {d}   |   {t}   |
+    |   {color(p)}   |   {color(d)}   |   {color(t)}   |
     |       |       |       |
     +-------+-------+-------+
     |       |       |       |
-    |   {c}   |   {p2}   |   {s}   |
+    |   {color(c)}   |   {color(p2)}   |   {color(s)}   |
     |       |       |       |
     +-------+-------+-------+
     |       |       |       |
-    |   {s2}   |   {o}   |   {d2}   |
+    |   {color(s2)}   |   {color(o)}   |   {color(d2)}   |
     |       |       |       |
     +-------+-------+-------+
     """
@@ -107,6 +118,8 @@ def check_free_fileds(board):
 def analyze(board):
     # The function analyzes the board's status in order to check if 
     # the player using 'O's or 'X's has won the game
+    global user_score
+    global computer_score
     for row in board:
         tmp = ""
         for val in row:
@@ -114,15 +127,17 @@ def analyze(board):
         #DEBUG
         #print(tmp)
         if tmp == COMPUTER_SYMBOL * 3:
+            computer_score += 1
+            display_board(board)
             print(VERDICTS[COMPUTER_SYMBOL])
             play_sound("sounds/videogame-death-sound-43894.mp3")
             raise EndGame
-            #return False
         elif tmp == USER_SYMBOL * 3:
+            user_score += 1
+            display_board(board)
             print(VERDICTS[USER_SYMBOL])
             play_sound("sounds/winsquare-6993.mp3")
             raise EndGame
-            #return False
         
     for row in range(3):
         tmp = ""
@@ -130,16 +145,18 @@ def analyze(board):
             tmp += str(board[col][row])
         #DEBUG
         #print(tmp)
-        if tmp == COMPUTER_SYMBOL * 3:
+        if tmp == COMPUTER_SYMBOL * 3:  
+            computer_score += 1
+            display_board(board)
             print(VERDICTS[COMPUTER_SYMBOL])
             play_sound("sounds/videogame-death-sound-43894.mp3")
             raise EndGame
-            #return False
         elif tmp == USER_SYMBOL * 3:
+            user_score += 1
+            display_board(board)
             print(VERDICTS[USER_SYMBOL])
             play_sound("sounds/winsquare-6993.mp3")
             raise EndGame
-            #return False
     
     tmp = str(board[0][0]) + str(board[1][1]) + str(board[2][2])
     tmp2 = str(board[0][2]) + str(board[1][1]) + str(board[2][0])
@@ -148,15 +165,17 @@ def analyze(board):
     #print(tmp)
     #print(tmp2)
     if tmp == COMPUTER_SYMBOL*3 or tmp2 == COMPUTER_SYMBOL*3:
+        computer_score += 1
+        display_board(board)
         print(VERDICTS[COMPUTER_SYMBOL])
         play_sound("sounds/videogame-death-sound-43894.mp3")
         raise EndGame
-        #return False
     elif tmp == USER_SYMBOL*3 or tmp2 == USER_SYMBOL*3:
+        user_score += 1
+        display_board(boarboardd)
         print(VERDICTS[USER_SYMBOL])
         play_sound("sounds/winsquare-6993.mp3")
         raise EndGame
-        #return False
 
 def draw_move(board):
     # The function draws the computer's move and updates the board.
@@ -168,12 +187,13 @@ def draw_move(board):
     else:
         #print("Computer drawing again!")
         draw_move(board)
-    print("\a")
 
 if __name__ == "__main__":
     # computer has already made a move
     # initial display of board
     try:
+        user_score = 0
+        computer_score = 0
         again=True
         while again:
             play_sound("sounds/game-start-6104.mp3", True)
