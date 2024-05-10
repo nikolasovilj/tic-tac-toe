@@ -168,35 +168,41 @@ def draw_move(board):
     else:
         #print("Computer drawing again!")
         draw_move(board)
+    print("\a")
 
 if __name__ == "__main__":
     # computer has already made a move
     # initial display of board
-    again=True
-    while again:
-        play_sound("sounds/game-start-6104.mp3", True)
-        display_board(board)
-        try:
-            while True:
-                # users move
-                print("users move")
-                enter_move(board)
-                display_board(board)
-                analyze(board)
-                check_free_fileds(board)
-                # computers move
-                print("computers move")
-                draw_move(board)
-                display_board(board)
-                analyze(board)
-                check_free_fileds(board)
-        except EndGame:
-            print("game is over!")
-            again = input("play again? y/n: ")
-            if again == 'n' or again == 'N':
-                again = False
-                print("Exiting game.")
-            else:
-                again = True
-                board = [[i for i in range(j+1,j+4)] for j in range(0, 9, 3)]
-                board[1][1] = COMPUTER_SYMBOL
+    try:
+        again=True
+        while again:
+            play_sound("sounds/game-start-6104.mp3", True)
+            display_board(board)
+            try:
+                while True:
+                    # users move
+                    print("users move")
+                    enter_move(board)
+                    display_board(board)
+                    analyze(board)
+                    check_free_fileds(board)
+                    # computers move
+                    print("computers move")
+                    draw_move(board)
+                    display_board(board)
+                    analyze(board)
+                    check_free_fileds(board)
+            except EndGame:
+                print("game is over!")
+                again = input("play again? y/n: ")
+                if again == 'n' or again == 'N':
+                    again = False
+                    print("Exiting game.")
+                else:
+                    again = True
+                    board = [[i for i in range(j+1,j+4)] for j in range(0, 9, 3)]
+                    board[1][1] = COMPUTER_SYMBOL
+    except KeyboardInterrupt:
+        print("\nkeyboard interrupt detected")
+        print("closing game")
+        sleep(0.3)
