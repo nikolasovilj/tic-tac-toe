@@ -1,7 +1,7 @@
 from random import randrange
 import os
-from time import sleep
 import sys
+from time import sleep
 from colorama import Style, Fore
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 from pygame import mixer
@@ -17,7 +17,6 @@ VERDICTS = {
     'tie': "it's a tie!",
     'continue': 'continue'
 }
-
 
 position = {
     '1': (0,0),
@@ -228,6 +227,6 @@ if __name__ == "__main__":
                     if not randomize:
                         board[1][1] = COMPUTER_SYMBOL
     except KeyboardInterrupt:
-        print("\nkeyboard interrupt detected")
-        print("closing game")
+        print("\nKeyboard interrupt detected.")
+        print("Closing game.")
         sleep(0.3)
