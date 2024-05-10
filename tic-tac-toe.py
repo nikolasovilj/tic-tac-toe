@@ -195,5 +195,8 @@ if __name__ == "__main__":
             again = input("play again? y/n: ")
             if again == 'n' or again == 'N':
                 again = False
+                print("Exiting game.")
             else:
                 again = True
+                board = [[i for i in range(j+1,j+4)] for j in range(0, 9, 3)]
+                board[1][1] = COMPUTER_SYMBOL
