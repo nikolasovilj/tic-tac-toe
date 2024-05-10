@@ -1,5 +1,8 @@
 from random import randrange
 import os
+from pygame import mixer
+from time import sleep
+import sys
 
 class EndGame(Exception):
     pass
@@ -27,6 +30,14 @@ position = {
     '8': (2,1),
     '9': (2,2)
 }
+
+def play_sound(sound_file, game_start=False):
+    mixer.init()
+    mixer.music.load(sound_file)
+    mixer.music.play()
+    if not game_start:
+        while mixer.music.get_busy():  # wait for music to finish playing
+            sleep(0.1)                 # otherwise the music.play() which is a thread gets killed 
 
 def clear_screen():
     if os.name == 'nt':
@@ -104,10 +115,12 @@ def analyze(board):
         #print(tmp)
         if tmp == COMPUTER_SYMBOL * 3:
             print(VERDICTS[COMPUTER_SYMBOL])
+            play_sound("sounds/videogame-death-sound-43894.mp3")
             raise EndGame
             #return False
         elif tmp == USER_SYMBOL * 3:
             print(VERDICTS[USER_SYMBOL])
+            play_sound("sounds/winsquare-6993.mp3")
             raise EndGame
             #return False
         
@@ -119,10 +132,12 @@ def analyze(board):
         #print(tmp)
         if tmp == COMPUTER_SYMBOL * 3:
             print(VERDICTS[COMPUTER_SYMBOL])
+            play_sound("sounds/videogame-death-sound-43894.mp3")
             raise EndGame
             #return False
         elif tmp == USER_SYMBOL * 3:
             print(VERDICTS[USER_SYMBOL])
+            play_sound("sounds/winsquare-6993.mp3")
             raise EndGame
             #return False
     
@@ -134,10 +149,12 @@ def analyze(board):
     #print(tmp2)
     if tmp == COMPUTER_SYMBOL*3 or tmp2 == COMPUTER_SYMBOL*3:
         print(VERDICTS[COMPUTER_SYMBOL])
+        play_sound("sounds/videogame-death-sound-43894.mp3")
         raise EndGame
         #return False
     elif tmp == USER_SYMBOL*3 or tmp2 == USER_SYMBOL*3:
         print(VERDICTS[USER_SYMBOL])
+        play_sound("sounds/winsquare-6993.mp3")
         raise EndGame
         #return False
 
@@ -155,20 +172,28 @@ def draw_move(board):
 if __name__ == "__main__":
     # computer has already made a move
     # initial display of board
-    display_board(board)
-    try:
-        while True:
-            # users move
-            print("users move")
-            enter_move(board)
-            display_board(board)
-            analyze(board)
-            check_free_fileds(board)
-            # computers move
-            print("computers move")
-            draw_move(board)
-            display_board(board)
-            analyze(board)
-            check_free_fileds(board)
-    except EndGame:
-        print("game is over!")
+    again=True
+    while again:
+        play_sound("sounds/game-start-6104.mp3", True)
+        display_board(board)
+        try:
+            while True:
+                # users move
+                print("users move")
+                enter_move(board)
+                display_board(board)
+                analyze(board)
+                check_free_fileds(board)
+                # computers move
+                print("computers move")
+                draw_move(board)
+                display_board(board)
+                analyze(board)
+                check_free_fileds(board)
+        except EndGame:
+            print("game is over!")
+            again = input("play again? y/n: ")
+            if again == 'n' or again == 'N':
+                again = False
+            else:
+                again = True
