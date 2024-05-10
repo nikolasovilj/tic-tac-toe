@@ -1,9 +1,10 @@
 from random import randrange
 import os
-from pygame import mixer
 from time import sleep
 import sys
 from colorama import Style, Fore
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+from pygame import mixer
 
 class EndGame(Exception):
     pass
@@ -17,8 +18,6 @@ VERDICTS = {
     'continue': 'continue'
 }
 
-board = [[i for i in range(j+1,j+4)] for j in range(0, 9, 3)]
-board[1][1] = COMPUTER_SYMBOL
 
 position = {
     '1': (0,0),
@@ -172,7 +171,7 @@ def analyze(board):
         raise EndGame
     elif tmp == USER_SYMBOL*3 or tmp2 == USER_SYMBOL*3:
         user_score += 1
-        display_board(boarboardd)
+        display_board(board)
         print(VERDICTS[USER_SYMBOL])
         play_sound("sounds/winsquare-6993.mp3")
         raise EndGame
@@ -189,9 +188,15 @@ def draw_move(board):
         draw_move(board)
 
 if __name__ == "__main__":
-    # computer has already made a move
-    # initial display of board
     try:
+        randomize = input("computer's first position should be random? y/n: ")
+        if randomize == "n" or randomize == "N":
+            randomize = False
+        else:
+            randomize = True
+        board = [[i for i in range(j+1,j+4)] for j in range(0, 9, 3)]
+        if not randomize:
+            board[1][1] = COMPUTER_SYMBOL
         user_score = 0
         computer_score = 0
         again=True
@@ -213,7 +218,6 @@ if __name__ == "__main__":
                     analyze(board)
                     check_free_fileds(board)
             except EndGame:
-                print("game is over!")
                 again = input("play again? y/n: ")
                 if again == 'n' or again == 'N':
                     again = False
@@ -221,7 +225,8 @@ if __name__ == "__main__":
                 else:
                     again = True
                     board = [[i for i in range(j+1,j+4)] for j in range(0, 9, 3)]
-                    board[1][1] = COMPUTER_SYMBOL
+                    if not randomize:
+                        board[1][1] = COMPUTER_SYMBOL
     except KeyboardInterrupt:
         print("\nkeyboard interrupt detected")
         print("closing game")
