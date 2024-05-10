@@ -1,4 +1,5 @@
 from random import randrange
+import os
 
 class EndGame(Exception):
     pass
@@ -27,6 +28,12 @@ position = {
     '9': (2,2)
 }
 
+def clear_screen():
+    if os.name == 'nt':
+        _ = os.system('cls')
+    else:
+        _ = os.system('clear')
+
 def display_board(board):
     # The function accepts one parameter containing the board's current status
     # and prints it out to the console.
@@ -47,7 +54,8 @@ def display_board(board):
     |   {s2}   |   {o}   |   {d2}   |
     |       |       |       |
     +-------+-------+-------+
-    """    
+    """
+    clear_screen()
     print(board_display)
 
 
