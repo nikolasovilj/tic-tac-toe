@@ -52,8 +52,6 @@ def display_board(board):
 
 
 def enter_move(board):
-    # The function accepts the board's current status, asks the user about their move, 
-    # checks the input, and updates the board according to the user's decision.
     while True:
         try:
             users_move = input("Enter a position: ")   
@@ -73,8 +71,6 @@ def enter_move(board):
         enter_move(board)
 
 def check_free_fileds(board):
-    # The function browses the board and builds a list of all the free squares; 
-    # the list consists of tuples, while each tuple is a pair of row and column numbers.
     free_fileds = []
     for row in range(3):
         for col in range(3):
@@ -89,7 +85,7 @@ def check_free_fileds(board):
         print(VERDICTS['tie'])
         raise EndGame
 
-def victory(board):
+def analyze(board):
     # The function analyzes the board's status in order to check if 
     # the player using 'O's or 'X's has won the game
     for row in board:
@@ -97,7 +93,7 @@ def victory(board):
         for val in row:
             tmp += str(val)
         #DEBUG
-        print(tmp)
+        #print(tmp)
         if tmp == COMPUTER_SYMBOL * 3:
             print(VERDICTS[COMPUTER_SYMBOL])
             raise EndGame
@@ -112,7 +108,7 @@ def victory(board):
         for col in range(3):
             tmp += str(board[col][row])
         #DEBUG
-        print(tmp)
+        #print(tmp)
         if tmp == COMPUTER_SYMBOL * 3:
             print(VERDICTS[COMPUTER_SYMBOL])
             raise EndGame
@@ -125,9 +121,9 @@ def victory(board):
     tmp = str(board[0][0]) + str(board[1][1]) + str(board[2][2])
     tmp2 = str(board[0][2]) + str(board[1][1]) + str(board[2][0])
     #DEBUG
-    print("final check")
-    print(tmp)
-    print(tmp2)
+    #print("final check")
+    #print(tmp)
+    #print(tmp2)
     if tmp == COMPUTER_SYMBOL*3 or tmp2 == COMPUTER_SYMBOL*3:
         print(VERDICTS[COMPUTER_SYMBOL])
         raise EndGame
@@ -145,7 +141,7 @@ def draw_move(board):
         # assign after it is available
         board[position[str(computers_move)][0]][position[str(computers_move)][1]] = COMPUTER_SYMBOL
     else:
-        print("Computer drawing again!")
+        #print("Computer drawing again!")
         draw_move(board)
 
 if __name__ == "__main__":
@@ -158,14 +154,13 @@ if __name__ == "__main__":
             print("users move")
             enter_move(board)
             display_board(board)
-            victory(board)
+            analyze(board)
             check_free_fileds(board)
             # computers move
             print("computers move")
             draw_move(board)
             display_board(board)
-            victory(board)
+            analyze(board)
             check_free_fileds(board)
     except EndGame:
-        print(EndGame)
         print("game is over!")
